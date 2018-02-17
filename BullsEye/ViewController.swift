@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import QuartzCore
 
 class ViewController: UIViewController {
     @IBOutlet weak var slider: UISlider!
@@ -39,20 +40,18 @@ class ViewController: UIViewController {
         let trackRightResizable =
             trackRightImage.resizableImage(withCapInsets: insets)
         slider.setMaximumTrackImage(trackRightResizable, for: .normal)
-        
         startNewGame()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+
     }
     @IBAction func showAlert() {
         let difference =  abs(targetValue-currentValue)
         var points = 100 - difference
-       
-        
         let title: String
+        
         if difference == 0{
             title = "Perfect!"
             points += 100
@@ -78,11 +77,10 @@ class ViewController: UIViewController {
                                    handler: { action in self.startNewRound()})
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
-        //startNewRound()
+      
     }
     
     @IBAction func sliderMoved(_ slider: UISlider){
-        //print("The value of the slider is now: \(slider.value)")
         currentValue = lroundf(slider.value)
     }
     
@@ -90,7 +88,13 @@ class ViewController: UIViewController {
         score = 0
         round = 0
         startNewRound()
+        let transition = CATransition()
+        transition.type = kCATransitionFade
+        transition.duration = 1
+        transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+        view.layer.add(transition, forKey: nil)
     }
+    
     func startNewRound(){
         round += 1
         targetValue = 1 + Int(arc4random_uniform(100))
